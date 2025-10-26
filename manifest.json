@@ -1,0 +1,10 @@
+{
+	"name": "Deputy",
+	"version_number": "0.1.0",
+	"website_url": "https://github.com/Xaidee/RORR-Deputy",
+	"description": "Adds the Deputy as a playable survivor as seen from the ROR2 mod of the same name!",
+	"dependencies": [
+		"ReturnOfModding-ReturnOfModding-1.1.4",
+		"ReturnsAPI-ReturnsAPI-1.0.0"
+	]
+}

@@ -1,0 +1,13 @@
+# Custom ignore file with same format as .gitignore
+extracted_audio/*
+*.wav
+*.ase
+*.aseprite
+*.gif
+
+# We could ignore these to make zip smaller (not essential to the package)
+.git/*
+#.gitignore
+#.pkgignore
+#create_package.sh
+#.editorconfig

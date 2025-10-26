@@ -1,0 +1,4 @@
+# Specific to this repo
+*.zip
+# General .gitignore rules not particular to this repo
+.DS_Store

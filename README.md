@@ -1,4 +1,4 @@
-# DEPUTY
+# DEPUTY ![Deputy Icon](https://raw.githubusercontent.com/Xaidee/RORR-Deputy/refs/heads/main/resources/sprites/survivors/deputy/idle.pn`g)
 
 The Deputy is an extremely mobile run-and-gun survivor who whittles enemies down with her revolvers before finishing them off with a massive burst of damage from her Special.
 
