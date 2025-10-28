@@ -3,6 +3,7 @@ local sprites = {
 	loadout = Sprite.new("survivor/deputy/loadout", "~/resources/sprites/survivors/deputy/loadout.png", 4, 28, 0),
 	--title = Sprite.new("survivor/deputy/title", "~/resources/sprites/survivors/deputy/title.png"),
 	idle = Sprite.new("survivor/deputy/idle", "~/resources/sprites/survivors/deputy/idle.png", 1, 12, 17),
+	idle_half = Sprite.new("survivor/deputy/idle_half", "~/resources/sprites/survivors/deputy/idle_half.png", 1, 12, 17),
 	walk = Sprite.new("survivor/deputy/walk", "~/resources/sprites/survivors/deputy/walk.png", 8, 14, 18),
 	--jump = Sprite.new("survivor/deputy/jump", "~/resources/sprites/survivors/deputy/jump.png"),
 	--jump_peak = Sprite.new("survivor/deputy/jump_peak", "~/resources/sprites/survivors/deputy/jump_peak.png"),
@@ -94,7 +95,7 @@ Callback.add(survivor.on_init, function(actor)
 	--actor.sprite_drone_shoot
 	--actor.sprite_climb_hurt
 	--actor.sprite_palette
-	--actor.sprite_idle_half		= Array.new({sprites.idle,		sprites.idle_half, 0})
+	actor.sprite_idle_half		= Array.new({sprites.idle,		sprites.idle_half, 0})
 	--actor.sprite_walk_half		= Array.new({sprites.walk,		sprites.walk_half, 0, sprites.walk_back})
 	--actor.sprite_jump_half		= Array.new({sprites.jump,		sprites.jump_half, 0})
 	--actor.sprite_jump_peak_half	= Array.new({sprites.jump_peak,	sprites.jump_peak_half, 0})
@@ -149,14 +150,7 @@ Callback.add(survivor.on_step, function(actor)
 	end
 end)
 
----@param attacker Actor
----@param victim Actor
----@param hit_info HitInfo
-Callback.add(Callback.ON_HIT_PROC, function(attacker, victim, hit_info)
-	local attacker_data = Instance.get_data(attacker)
-	if (attacker_data.hot_pursuit == nil) then return end
-	attacker_data.hot_pursuit = attacker_data.hot_pursuit + 1
-end)
+
 
 ---[
 --- SKILLS
@@ -173,7 +167,7 @@ skillZ.damage = 1.5
 skillZ.require_key_press = false
 skillZ.disable_aim_stall = true
 --skillZ.does_change_activity_state = true
---skillZ.required_interrupt_priority = ActorState.InterruptPriority.ANY
+skillZ.required_interrupt_priority = ActorState.InterruptPriority.ANY
 
 local stateZ = ActorState.new("deputy/skillZa")
 
@@ -328,28 +322,63 @@ survivor:add_skill(Skill.Slot.SPECIAL, skillVAlt)
 local log = SurvivorLog.new_from_survivor(survivor)
 
 local achievements = {
-	root = Achievement.new("deputy"),
-	rose_buckler = Achievement.new("rose_buckler"),
-	milestone_stages = Achievement.new("deputy.milestone_stages"),
-	milestone_kills = Achievement.new("deputy.milestone_kills"),
-	milestone_items = Achievement.new("deputy.milestone_items"),
+	unlock_deputy = Achievement.new("unlock_deputy"),
+	unlock_rose_buckler = Achievement.new("unlock_rose_buckler"),
+	unlock_deputy_x2 = Achievement.new("unlock_deputy_x2"),
+	unlock_deputy_c2 = Achievement.new("unlock_deputy_c2"),
+	unlock_deputy_v2 = Achievement.new("unlock_deputy_v2"),
 }
 
-local parent_id = achievements.root.value
-achievements.root.group = 1
-achievements.root:set_unlock_survivor(survivor)
+print("Milestone Stages = "..survivor.milestone_stages_1)
+print("Milestone Kills = "..survivor.milestone_kills_1)
+print("Milestone Items = "..survivor.milestone_items_1)
 
-achievements.rose_buckler.parent_id = parent_id
+local parent_id = achievements.unlock_deputy.value
+achievements.unlock_deputy.group = Achievement.Group.CHARACTER
+achievements.unlock_deputy.unlock_kind = Achievement.Kind.SURVIVOR
+achievements.unlock_deputy:set_unlock_survivor(survivor)
+
+achievements.unlock_rose_buckler.parent_id = parent_id
+achievements.unlock_rose_buckler.unlock_kind = Achievement.Kind.ITEM
+
 local rose_buckler = Item.find("rose_buckler")
 if (rose_buckler ~= nil) then
-	achievements.rose_buckler:set_unlock_item(rose_buckler)
+	achievements.unlock_rose_buckler:set_unlock_item(rose_buckler)
 end
 
-achievements.milestone_stages.parent_id = parent_id
-achievements.milestone_stages:set_unlock_skill(skillXAlt)
+---@enum
+local Milestone = {
+	KILLS = 0,
+	ITEMS = 1,
+	STAGES = 2,
+}
 
-achievements.milestone_kills.parent_id = parent_id
+---@param achievement Achievement
+---@param survivor_in Survivor
+---@param milestone number
+local function set_milestone(achievement, survivor_in, milestone)
+	if (milestone == Milestone.KILLS) then
+		survivor.milestone_kills_1 = Milestone.KILLS
+		achievement.milestone_alt_unlock = survivor_in.milestone_kills_1
+	elseif (milestone == Milestone.ITEMS) then
+		survivor.milestone_items_1 = Milestone.ITEMS
+		achievement.milestone_alt_unlock = survivor_in.milestone_items_1
+	elseif (milestone == Milestone.STAGES) then
+		survivor.milestone_stages_1 = Milestone.STAGES
+		achievement.milestone_alt_unlock = survivor_in.milestone_stages_1
+	end
+	achievement.milestone_survivor = survivor_in.value
+end
 
-achievements.milestone_items.parent_id = parent_id
-achievements.milestone_items:set_unlock_skill(skillVAlt)
+achievements.unlock_deputy_x2.parent_id = parent_id
+achievements.unlock_deputy_x2.unlock_kind = Achievement.Kind.SURVIVOR_LOADOUT_UNLOCKABLE
+set_milestone(achievements.unlock_deputy_x2, survivor, Milestone.STAGES)
+achievements.unlock_deputy_x2:set_unlock_skill(skillXAlt)
 
+achievements.unlock_deputy_c2.parent_id = parent_id
+set_milestone(achievements.unlock_deputy_c2, survivor, Milestone.KILLS)
+
+achievements.unlock_deputy_v2.parent_id = parent_id
+achievements.unlock_deputy_v2.unlock_kind = Achievement.Kind.SURVIVOR_LOADOUT_UNLOCKABLE
+set_milestone(achievements.unlock_deputy_v2, survivor, Milestone.ITEMS)
+achievements.unlock_deputy_v2:set_unlock_skill(skillVAlt)

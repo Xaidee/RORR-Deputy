@@ -58,18 +58,26 @@ return {
 		}
 	},
 	achievement = {
-		deputy = {
+		unlock_deputy = {
 			name = "Speed Demon",
-			description = "",
-			milestone_stages = {
-				--name = "",
-				--description = "",
-				description2 = "Complete 25 stages as Deputy."
-			}
+			description = "Beat the game in under 20 minutes.",
 		},
 		rose_buckler = {
 			--name = "",
 			description = "Deputy: do something..."
-		}
+		},
 	},
+	ui = {
+		options = {
+			deputy = {
+				header = "DEPUTY",
+				force_unlock_survivor = "Force unlock Deputy",
+				["force_unlock_survivor.desc"] = "Removes the <b>Achievement</c> associated with unlocking <y>Deputy</c>.",
+				force_unlock_skills = "Force unlock Skills.",
+				["force_unlock_skills.desc"] = "Removes all associated <b>Achievements</c> with unlocking Deputy's alt <y>Skills</c>.",
+				force_unlock_items = "Force unlock Items",
+				["force_unlock_items.desc"] = "Removes all associated <b>Achievements</c> with unlocking <y>Items</c> added by the mod.",
+			}
+		}
+	}
 }
